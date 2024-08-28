@@ -1,0 +1,156 @@
+{
+	"name": "DL_transformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_user",
+						"type": "DatasetReference"
+					},
+					"name": "user"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_azureBookReview",
+						"type": "DatasetReference"
+					},
+					"name": "bookreview"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LS_toAzureDb",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkBook"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_toAzureDb",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkReviews"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "Book"
+				},
+				{
+					"name": "Reviews",
+					"description": "reviews[1]._id, reviews[0].createdAt, reviews[1].createdAt, reviews[0].userid, reviews[1].userid'"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {_id} as string,",
+				"          firstName as string,",
+				"          lastName as string,",
+				"          email as string,",
+				"          password as string,",
+				"          role as string,",
+				"          {__v} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> user",
+				"source(output(",
+				"          {_id} as string,",
+				"          title as string,",
+				"          author as string,",
+				"          genre as string,",
+				"          description as string,",
+				"          image as string,",
+				"          averageRating as string,",
+				"          {__v} as string,",
+				"          {reviews[0].username} as string,",
+				"          {reviews[1].username} as string,",
+				"          {reviews[0].rating} as string,",
+				"          {reviews[1].rating} as string,",
+				"          {reviews[0].comment} as string,",
+				"          {reviews[1].comment} as string,",
+				"          {reviews[0]._id} as string,",
+				"          {reviews[1]._id} as string,",
+				"          {reviews[0].createdAt} as string,",
+				"          {reviews[1].createdAt} as string,",
+				"          {reviews[0].userid} as string,",
+				"          {reviews[1].userid} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> bookreview",
+				"user, bookreview join(user@{_id} == {reviews[0].userid},",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          book_id = bookreview@{_id},",
+				"          title,",
+				"          author,",
+				"          genre,",
+				"          description,",
+				"          image,",
+				"          averageRating,",
+				"          {reviews[0]._id},",
+				"          {reviews[1]._id}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Book",
+				"join1 select(mapColumn(",
+				"          {_id} = user@{_id},",
+				"          firstName,",
+				"          lastName,",
+				"          email,",
+				"          role,",
+				"          {_id} = bookreview@{_id},",
+				"          title,",
+				"          author,",
+				"          genre,",
+				"          description,",
+				"          averageRating,",
+				"          {reviews[0].username},",
+				"          {reviews[0].rating},",
+				"          {reviews[0].comment},",
+				"          {reviews[0].userid}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Reviews",
+				"Book sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'prep',",
+				"     tableName: 'transformed_book',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkBook",
+				"Reviews sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'prep',",
+				"     tableName: 'Reviews',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkReviews"
+			]
+		}
+	}
+}
