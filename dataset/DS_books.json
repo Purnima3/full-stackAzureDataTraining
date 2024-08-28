@@ -1,0 +1,96 @@
+{
+	"name": "DS_books",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_azureBloblinkService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "books.csv",
+				"container": "fullstack-data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "_id",
+				"type": "String"
+			},
+			{
+				"name": "title",
+				"type": "String"
+			},
+			{
+				"name": "author",
+				"type": "String"
+			},
+			{
+				"name": "genre",
+				"type": "String"
+			},
+			{
+				"name": "description",
+				"type": "String"
+			},
+			{
+				"name": "image",
+				"type": "String"
+			},
+			{
+				"name": "averageRating",
+				"type": "String"
+			},
+			{
+				"name": "__v",
+				"type": "String"
+			},
+			{
+				"name": "reviews[0].username",
+				"type": "String"
+			},
+			{
+				"name": "reviews[1].username",
+				"type": "String"
+			},
+			{
+				"name": "reviews[0].rating",
+				"type": "String"
+			},
+			{
+				"name": "reviews[1].rating",
+				"type": "String"
+			},
+			{
+				"name": "reviews[0].comment",
+				"type": "String"
+			},
+			{
+				"name": "reviews[1].comment",
+				"type": "String"
+			},
+			{
+				"name": "reviews[0]._id",
+				"type": "String"
+			},
+			{
+				"name": "reviews[1]._id",
+				"type": "String"
+			},
+			{
+				"name": "reviews[0].createdAt",
+				"type": "String"
+			},
+			{
+				"name": "reviews[1].createdAt",
+				"type": "String"
+			}
+		]
+	}
+}

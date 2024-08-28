@@ -1,0 +1,16 @@
+{
+	"name": "DB_azureBookReview",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_toAzureDb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "staging",
+			"table": "book_review_data"
+		}
+	}
+}

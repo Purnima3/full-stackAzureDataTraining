@@ -1,0 +1,16 @@
+{
+	"name": "DS_azuretableBooks",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_toAzureDb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "staging",
+			"table": "books"
+		}
+	}
+}

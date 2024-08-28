@@ -1,0 +1,23 @@
+{
+	"name": "DB_book_review",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_azureBloblinkService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "books_review.csv",
+				"container": "fullstack-data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
